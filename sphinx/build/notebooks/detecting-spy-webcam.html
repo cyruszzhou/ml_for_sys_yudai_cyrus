@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jupyter Notebook on Detecting Spying Webcams &mdash; Detecting Spying Webcams 0.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Result Discussion" href="../additional/results.html" />
+    <link rel="prev" title="Project Preview: Detecting Spying Webcams" href="../additional/preview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Detecting Spying Webcams
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../additional/preview.html">Project Preview: Detecting Spying Webcams</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Jupyter Notebook on Detecting Spying Webcams</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Part-0:-Data-Speculation">Part 0: Data Speculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Part-1:-Packet-Capture">Part 1: Packet Capture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Part-2:-Feature-Generation">Part 2: Feature Generation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#1.-Generating-Features-For-Multiclass-Classification">1. Generating Features For Multiclass Classification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#2.-Generating-Features-and-Labels-for-Binary-Classification:-Spy-vs-Non-Spy">2. Generating Features and Labels for Binary Classification: Spy vs Non-Spy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Part-3:-Supervised-model">Part 3: Supervised model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Part-4:-Unsupervised-model">Part 4: Unsupervised model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../additional/results.html">Result Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../additional/results.html#limitations-and-future-work">Limitations and Future Work</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../additional/results.html#notes-on-parameter-tuning">Notes on Parameter Tuning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../additional/results.html#conclusion">Conclusion</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Detecting Spying Webcams</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Jupyter Notebook on Detecting Spying Webcams</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/notebooks/detecting-spy-webcam.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="Jupyter-Notebook-on-Detecting-Spying-Webcams">
+<h1>Jupyter Notebook on Detecting Spying Webcams<a class="headerlink" href="#Jupyter-Notebook-on-Detecting-Spying-Webcams" title="Permalink to this heading"></a></h1>
+<p>In this project, we implement machine learning models that detect webcam spying by means of packet capturing. There were three steps in this project.</p>
+<ol class="arabic simple" start="0">
+<li><p>Data Speculation from example pcap files.</p></li>
+<li><p>Capturing packet traces under different conditions: with/without the spying; and various webcam usages - <strong>(0) nothing, (1) only spying, (2) WeChat Video Call, (3) Wechat Video Call while also spying, (4) Zoom Video Conferencing, (5) Zoom Video Conferencing while also spying.</strong></p></li>
+<li><p>Feature Generation</p></li>
+<li><p>Training and evaluating supervised models for both multiclass (the 6 scenarios) and binary classifications (spying vs non-spying).</p></li>
+<li><p>Evaluating unsupervised models for binary classification.</p></li>
+</ol>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>import warnings
+warnings.filterwarnings(&#39;ignore&#39;)
+
+import logging
+logging.getLogger(&quot;scapy.runtime&quot;).setLevel(logging.ERROR)
+
+from netml.pparser.parser import PCAP
+from netml.utils.tool import dump_data, load_data
+
+import pandas as pd
+import numpy as np
+from IPython.display import clear_output
+</pre></div>
+</div>
+</div>
+<section id="Part-0:-Data-Speculation">
+<h2>Part 0: Data Speculation<a class="headerlink" href="#Part-0:-Data-Speculation" title="Permalink to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>example_pcap_n = PCAP(&#39;data/n_2.pcap&#39;)
+example_pcap_s = PCAP(&#39;data/s_9.pcap&#39;)
+example_pcap_w = PCAP(&#39;data/w_4.pcap&#39;)
+example_pcap_ws = PCAP(&#39;data/w+s_5.pcap&#39;)
+example_pcap_z = PCAP(&#39;data/z_6.pcap&#39;)
+example_pcap_zs = PCAP(&#39;data/z+s_7.pcap&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># We unify the source ip, destination ip, source port, destination port
+# and protocol for every packets, so that we can treat them as one &quot;flow&quot;
+def ip_protocol_agnostic(flows):
+    agnostic_flows = []
+    dummy_tuple = (&#39;1.1.1.1&#39;, &#39;2.2.2.2&#39;, 5000, 5000, 6)
+    for flow in flows:
+        agnostic_flows.append((dummy_tuple,flow[1]))
+    return agnostic_flows
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>example_pcap_n.pcap2flows()
+example_pcap_s.pcap2flows()
+example_pcap_w.pcap2flows()
+example_pcap_ws.pcap2flows()
+example_pcap_z.pcap2flows()
+example_pcap_zs.pcap2flows()
+clear_output(wait=False)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>example_pcap_n.flow2features(&#39;SAMP_SIZE&#39;)
+example_pcap_s.flow2features(&#39;SAMP_SIZE&#39;)
+example_pcap_w.flow2features(&#39;SAMP_SIZE&#39;)
+example_pcap_ws.flow2features(&#39;SAMP_SIZE&#39;)
+example_pcap_z.flow2features(&#39;SAMP_SIZE&#39;)
+example_pcap_zs.flow2features(&#39;SAMP_SIZE&#39;)
+clear_output(wait=False)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+
+<span></span>df_example_n = pd.DataFrame(example_pcap_n.features)
+df_example_s = pd.DataFrame(example_pcap_s.features)
+df_example_w = pd.DataFrame(example_pcap_w.features)
+df_example_ws = pd.DataFrame(example_pcap_ws.features)
+df_example_z = pd.DataFrame(example_pcap_z.features)
+df_example_zs = pd.DataFrame(example_pcap_zs.features)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>agnostic_sampsize_n = df_example_n.sum(axis=0)
+agnostic_sampsize_s = df_example_s.sum(axis=0)
+agnostic_sampsize_w = df_example_w.sum(axis=0)
+agnostic_sampsize_ws = df_example_ws.sum(axis=0)
+agnostic_sampsize_z = df_example_z.sum(axis=0)
+agnostic_sampsize_zs = df_example_zs.sum(axis=0)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>example_pcap_n.flow2features(&#39;SAMP_NUM&#39;)
+example_pcap_s.flow2features(&#39;SAMP_NUM&#39;)
+example_pcap_w.flow2features(&#39;SAMP_NUM&#39;)
+example_pcap_ws.flow2features(&#39;SAMP_NUM&#39;)
+example_pcap_z.flow2features(&#39;SAMP_NUM&#39;)
+example_pcap_zs.flow2features(&#39;SAMP_NUM&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;_flow2features()&#39; starts at 2022-12-07 12:59:31
+True
+&#39;_flow2features()&#39; ends at 2022-12-07 12:59:31 and takes 0.0001 mins.
+&#39;_flow2features()&#39; starts at 2022-12-07 12:59:31
+True
+&#39;_flow2features()&#39; ends at 2022-12-07 12:59:32 and takes 0.0121 mins.
+&#39;_flow2features()&#39; starts at 2022-12-07 12:59:32
+True
+&#39;_flow2features()&#39; ends at 2022-12-07 12:59:32 and takes 0.0011 mins.
+&#39;_flow2features()&#39; starts at 2022-12-07 12:59:32
+True
+&#39;_flow2features()&#39; ends at 2022-12-07 12:59:32 and takes 0.0049 mins.
+&#39;_flow2features()&#39; starts at 2022-12-07 12:59:32
+True
+&#39;_flow2features()&#39; ends at 2022-12-07 12:59:32 and takes 0.0009 mins.
+&#39;_flow2features()&#39; starts at 2022-12-07 12:59:32
+True
+&#39;_flow2features()&#39; ends at 2022-12-07 12:59:33 and takes 0.0108 mins.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>df_example_n = pd.DataFrame(example_pcap_n.features)
+df_example_s = pd.DataFrame(example_pcap_s.features)
+df_example_w = pd.DataFrame(example_pcap_w.features)
+df_example_ws = pd.DataFrame(example_pcap_ws.features)
+df_example_z = pd.DataFrame(example_pcap_z.features)
+df_example_zs = pd.DataFrame(example_pcap_zs.features)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>agnostic_sampnum_n = df_example_n.sum(axis=0)
+agnostic_sampnum_s = df_example_s.sum(axis=0)
+agnostic_sampnum_w = df_example_w.sum(axis=0)
+agnostic_sampnum_ws = df_example_ws.sum(axis=0)
+agnostic_sampnum_z = df_example_z.sum(axis=0)
+agnostic_sampnum_zs = df_example_zs.sum(axis=0)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>list_sampsize = [agnostic_sampsize_n, agnostic_sampsize_s,
+                 agnostic_sampsize_w, agnostic_sampsize_ws,
+                 agnostic_sampsize_z, agnostic_sampsize_zs]
+list_sampnum = [agnostic_sampnum_n, agnostic_sampnum_s,
+                agnostic_sampnum_w, agnostic_sampnum_ws,
+                agnostic_sampnum_z, agnostic_sampnum_zs]
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>import math
+def get_aligned_df(list_feat):
+    aligned_list = []
+    min_length = math.inf
+    for feat in list_feat:
+        if feat.size &lt; min_length:
+            min_length = feat.size
+    for feat in list_feat:
+        aligned_list.append(feat)
+    aligned_df = pd.DataFrame(aligned_list).fillna(0)
+    return aligned_df
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>aligned_sampsize_df = get_aligned_df(list_sampsize)
+aligned_sampnum_df = get_aligned_df(list_sampnum)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>aligned_sampsize_df.transpose().plot()
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;AxesSubplot: &gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_detecting-spy-webcam_15_1.png" src="../_images/notebooks_detecting-spy-webcam_15_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>aligned_sampnum_df.transpose().plot()
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;AxesSubplot: &gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_detecting-spy-webcam_16_1.png" src="../_images/notebooks_detecting-spy-webcam_16_1.png" />
+</div>
+</div>
+<p>We can see that there are significant variations in samp_num and samp_size among the 6 example pcaps (one from each scenario). We decide to go with these two features.</p>
+</section>
+<section id="Part-1:-Packet-Capture">
+<h2>Part 1: Packet Capture<a class="headerlink" href="#Part-1:-Packet-Capture" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Importing Required Libraries</p></li>
+</ul>
+<ul class="simple">
+<li><p>Randomly Select certain number (now is 15) of instances from each scenario</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># We need 6 pairs of lists of data indices, each for one scenario,
+# to select from our collected data.
+# Tuples are ([Training Indices, Testing Indices]).
+import random
+random.seed(10)
+# Change this number to tweak the train/test split sizes
+NUM_DATA_FOR_TRAINING = 15
+
+# A list that contains integers from 0 to 19
+# for getting corresponding tests through set minusing
+list_all_20 = list(range(20))
+
+# Randomly sample train indices from 0 to 19
+train_n = random.sample(range(20), NUM_DATA_FOR_TRAINING)
+train_s = random.sample(range(20), NUM_DATA_FOR_TRAINING)
+train_w = random.sample(range(20), NUM_DATA_FOR_TRAINING)
+train_ws = random.sample(range(20), NUM_DATA_FOR_TRAINING)
+train_z = random.sample(range(20), NUM_DATA_FOR_TRAINING)
+train_zs = random.sample(range(20), NUM_DATA_FOR_TRAINING)
+
+# This is a helper function that returns the set minusing
+# result of list_all_20 and the list of indices for training
+def get_corresponding_test(train_list):
+    temp = []
+    for element in list_all_20:
+        if element not in train_list:
+            temp.append(element)
+    return temp
+
+# We get the corresponding test indices for each scenario
+test_n = get_corresponding_test(train_n)
+test_s = get_corresponding_test(train_s)
+test_w = get_corresponding_test(train_w)
+test_ws = get_corresponding_test(train_ws)
+test_z = get_corresponding_test(train_z)
+test_zs = get_corresponding_test(train_zs)
+
+# A function that converts the index list into
+# file name lists for PCAP reading
+def get_full_file_name(index_list, scenario_letters):
+    res = []
+    for index in index_list:
+        res.append(&quot;data/&quot;+scenario_letters+&quot;_&quot;+str(index+1)+&quot;.pcap&quot;)
+    return res
+
+# Getting full file names for the training index lists
+train_n = get_full_file_name(train_n, &#39;n&#39;)
+train_s = get_full_file_name(train_s, &#39;s&#39;)
+train_w = get_full_file_name(train_w, &#39;w&#39;)
+train_ws = get_full_file_name(train_ws, &#39;w+s&#39;)
+train_z = get_full_file_name(train_z, &#39;z&#39;)
+train_zs = get_full_file_name(train_zs, &#39;z+s&#39;)
+
+# Getting full file names for the testing index lists
+test_n = get_full_file_name(test_n, &#39;n&#39;)
+test_s = get_full_file_name(test_s, &#39;s&#39;)
+test_w = get_full_file_name(test_w, &#39;w&#39;)
+test_ws = get_full_file_name(test_ws, &#39;w+s&#39;)
+test_z = get_full_file_name(test_z, &#39;z&#39;)
+test_zs = get_full_file_name(test_zs, &#39;z+s&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># This function returns a list of list of
+# flows for further processing from the list
+# of file names passed in
+# All flows converted within each PCAP are
+# concatenated into one list
+def get_listof_listof_flows(list_filename):
+    all_flows = []
+    for filename in list_filename:
+        tmp_pcap = PCAP(filename)
+        tmp_pcap.pcap2flows()
+        all_flows.append(tmp_pcap.flows)
+    return all_flows
+
+# Generating lists of lists of flows for the training portions
+list_train_n = get_listof_listof_flows(train_n)
+list_train_s = get_listof_listof_flows(train_s)
+list_train_w = get_listof_listof_flows(train_w)
+list_train_ws = get_listof_listof_flows(train_ws)
+list_train_z = get_listof_listof_flows(train_z)
+list_train_zs = get_listof_listof_flows(train_zs)
+
+# Generating lists of lists of flows for the testing portions
+list_test_n = get_listof_listof_flows(test_n)
+list_test_s = get_listof_listof_flows(test_s)
+list_test_w = get_listof_listof_flows(test_w)
+list_test_ws = get_listof_listof_flows(test_ws)
+list_test_z = get_listof_listof_flows(test_z)
+list_test_zs = get_listof_listof_flows(test_zs)
+
+# We clear the output here as the PCAP structs
+# would likely have a lot of messages printed
+clear_output(wait=False)
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Part-2:-Feature-Generation">
+<h2>Part 2: Feature Generation<a class="headerlink" href="#Part-2:-Feature-Generation" title="Permalink to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># This helper function generates ipagnostic
+# (i.e., taking everything as one &#39;flow&#39;)
+# numbers of packets during a certain time interval
+def get_ipagnostic_samp_nums(listof_listof_flows):
+    # dummy pcap instance for feature generation
+    tmp_pcap = PCAP(&quot;data/n_1.pcap&quot;)
+    tmp_pcap.pcap2flows()
+    dflist_ipagnostic = []
+    for listof_flows in listof_listof_flows:
+        tmp_pcap.flows = listof_flows
+        tmp_pcap.flow2features(&#39;SAMP_NUM&#39;)
+        df_tmp = pd.DataFrame(tmp_pcap.features)
+        df_agnostic_tmp = df_tmp.sum(axis=0)
+        dflist_ipagnostic.append(df_agnostic_tmp)
+    return pd.DataFrame(dflist_ipagnostic).fillna(0)
+
+# This helper function generates ipagnostic
+# (i.e., taking everything as one &#39;flow&#39;)
+# total sizes of packets during a certain time interval
+def get_ipagnostic_samp_sizes(listof_listof_flows):
+    # dummy pcap instance for feature generation
+    tmp_pcap = PCAP(&quot;data/n_1.pcap&quot;)
+    tmp_pcap.pcap2flows()
+    dflist_ipagnostic = []
+    for listof_flows in listof_listof_flows:
+        tmp_pcap.flows = listof_flows
+        tmp_pcap.flow2features(&#39;SAMP_SIZE&#39;)
+        df_tmp = pd.DataFrame(tmp_pcap.features)
+        df_agnostic_tmp = df_tmp.sum(axis=0)
+        dflist_ipagnostic.append(df_agnostic_tmp)
+    return pd.DataFrame(dflist_ipagnostic).fillna(0)
+</pre></div>
+</div>
+</div>
+<section id="1.-Generating-Features-For-Multiclass-Classification">
+<h3>1. Generating Features For Multiclass Classification<a class="headerlink" href="#1.-Generating-Features-For-Multiclass-Classification" title="Permalink to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.1</span> <span class="n">Generating</span> <span class="n">Training</span> <span class="n">Data</span>
+</pre></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Generate packet-level samp_num features for each scenario
+# using the lists of flows previously concatenated
+sampnums_train_n = get_ipagnostic_samp_nums(list_train_n)
+sampnums_train_s = get_ipagnostic_samp_nums(list_train_s)
+sampnums_train_w = get_ipagnostic_samp_nums(list_train_w)
+sampnums_train_ws = get_ipagnostic_samp_nums(list_train_ws)
+sampnums_train_z = get_ipagnostic_samp_nums(list_train_z)
+sampnums_train_zs = get_ipagnostic_samp_nums(list_train_zs)
+
+# Generate packet-level samp_size features for each scenario
+# using the lists of flows previously concatenated
+sampsizes_train_n = get_ipagnostic_samp_sizes(list_train_n)
+sampsizes_train_s = get_ipagnostic_samp_sizes(list_train_s)
+sampsizes_train_w = get_ipagnostic_samp_sizes(list_train_w)
+sampsizes_train_ws = get_ipagnostic_samp_sizes(list_train_ws)
+sampsizes_train_z = get_ipagnostic_samp_sizes(list_train_z)
+sampsizes_train_zs = get_ipagnostic_samp_sizes(list_train_zs)
+
+# We clear outputs here as it would take up too much space
+clear_output(wait=False)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># We assign each scenario a label
+# n&lt;-0, s&lt;-1, w&lt;-2, ws&lt;-3, z&lt;-4, zs&lt;-5
+sampsizes_train_n[&quot;label&quot;] = 0
+sampsizes_train_s[&quot;label&quot;] = 1
+sampsizes_train_w[&quot;label&quot;] = 2
+sampsizes_train_ws[&quot;label&quot;] = 3
+sampsizes_train_z[&quot;label&quot;] = 4
+sampsizes_train_zs[&quot;label&quot;] = 5
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># We concatenate features from every scenario into whole dataframes for training
+# We also concatenate labels in the same order
+sampnums_all = pd.concat([sampnums_train_n, sampnums_train_s, sampnums_train_z, sampnums_train_zs, sampnums_train_w, sampnums_train_ws], axis=0).iloc[:,:50]
+sampsizes_all = pd.concat([sampsizes_train_n, sampsizes_train_s, sampsizes_train_z, sampsizes_train_zs, sampsizes_train_w, sampsizes_train_ws], axis=0).iloc[:,:50]
+both_features_train_multi =  pd.concat([sampnums_all,sampsizes_all], axis=1).fillna(0)
+
+labels_multi = pd.concat([sampsizes_train_n, sampsizes_train_s, sampsizes_train_z, sampsizes_train_zs, sampsizes_train_w, sampsizes_train_ws], axis=0)[&quot;label&quot;]
+</pre></div>
+</div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.2</span> <span class="n">Generating</span> <span class="n">Testing</span> <span class="n">Data</span>
+</pre></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># We similarly generate the features for our test data
+sampnums_test_n = get_ipagnostic_samp_nums(list_test_n)
+sampnums_test_s = get_ipagnostic_samp_nums(list_test_s)
+sampnums_test_w = get_ipagnostic_samp_nums(list_test_w)
+sampnums_test_ws = get_ipagnostic_samp_nums(list_test_ws)
+sampnums_test_z = get_ipagnostic_samp_nums(list_test_z)
+sampnums_test_zs = get_ipagnostic_samp_nums(list_test_zs)
+
+sampsizes_test_n = get_ipagnostic_samp_sizes(list_test_n)
+sampsizes_test_s = get_ipagnostic_samp_sizes(list_test_s)
+sampsizes_test_w = get_ipagnostic_samp_sizes(list_test_w)
+sampsizes_test_ws = get_ipagnostic_samp_sizes(list_test_ws)
+sampsizes_test_z = get_ipagnostic_samp_sizes(list_test_z)
+sampsizes_test_zs = get_ipagnostic_samp_sizes(list_test_zs)
+clear_output(wait=False)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># We label the test data correspondingly as well
+sampsizes_test_n[&quot;label&quot;] = 0
+sampsizes_test_s[&quot;label&quot;] = 1
+sampsizes_test_w[&quot;label&quot;] = 2
+sampsizes_test_ws[&quot;label&quot;] = 3
+sampsizes_test_z[&quot;label&quot;] = 4
+sampsizes_test_zs[&quot;label&quot;] = 5
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Likewise, we concatenate all features and label data in sequence
+sampnums_all_test = pd.concat([sampnums_test_n, sampnums_test_s, sampnums_test_z, sampnums_test_zs, sampnums_test_w, sampnums_test_ws], axis=0).iloc[:,:50]
+sampsizes_all_test = pd.concat([sampsizes_test_n, sampsizes_test_s, sampsizes_test_z, sampsizes_test_zs, sampsizes_test_w, sampsizes_test_ws], axis=0).iloc[:,:50]
+both_features_test_multi =  pd.concat([sampnums_all_test,sampsizes_all_test], axis=1).fillna(0)
+labels_test_multi = pd.concat([sampsizes_test_n, sampsizes_test_s, sampsizes_test_z, sampsizes_test_zs, sampsizes_test_w, sampsizes_test_ws], axis=0)[&quot;label&quot;]
+</pre></div>
+</div>
+</div>
+</section>
+<section id="2.-Generating-Features-and-Labels-for-Binary-Classification:-Spy-vs-Non-Spy">
+<h3>2. Generating Features and Labels for Binary Classification: Spy vs Non-Spy<a class="headerlink" href="#2.-Generating-Features-and-Labels-for-Binary-Classification:-Spy-vs-Non-Spy" title="Permalink to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># As our research interest lies mainly in detecting if there is any
+# camera spying, let&#39;s categorize our data int spied and unspied conditions
+# This increases data size (and thus accuracy) and mitigates overfitting
+list_train_unspied = list_train_n + list_train_w + list_train_z
+list_train_spied =  list_train_s + list_train_ws + list_train_zs
+
+# Generating samp_num and samp_size features for spied and unspied flows
+sampnums_train_unspied = get_ipagnostic_samp_nums(list_train_unspied)
+sampnums_train_spied = get_ipagnostic_samp_nums(list_train_spied)
+
+sampsizes_train_unspied = get_ipagnostic_samp_sizes(list_train_unspied)
+sampsizes_train_spied = get_ipagnostic_samp_sizes(list_train_spied)
+
+# We clear the output as the previous operations would be printing out too many messages
+clear_output(wait=False)
+
+sampnums_both = pd.concat([sampnums_train_unspied,sampnums_train_spied]).fillna(0)
+sampsizes_both = pd.concat([sampsizes_train_unspied,sampsizes_train_spied]).fillna(0)
+
+sampsizes_train_unspied[&quot;label&quot;] = 0
+sampsizes_train_spied[&quot;label&quot;] = 1
+labels_bin = pd.concat([sampsizes_train_unspied[&quot;label&quot;], sampsizes_train_spied[&quot;label&quot;]])
+sampsizes_train_unspied = sampsizes_train_unspied.drop(&quot;label&quot;,axis=1)
+sampsizes_train_spied = sampsizes_train_spied.drop(&quot;label&quot;,axis=1)
+
+features_both = pd.concat([sampnums_both.iloc[:,:50],sampsizes_both.iloc[:,:50]],axis=1)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># As our research interest lies mainly in detecting if there is any
+# camera spying, let&#39;s categorize our data int spied and unspied conditions
+# This increases data size (and thus accuracy) and mitigates overfitting
+list_test_unspied = list_test_n + list_test_w + list_test_z
+list_test_spied =  list_test_s + list_test_ws + list_test_zs
+
+# Generating samp_num and samp_size features for spied and unspied flows
+sampnums_test_unspied = get_ipagnostic_samp_nums(list_test_unspied)
+sampnums_test_spied = get_ipagnostic_samp_nums(list_test_spied)
+
+sampsizes_test_unspied = get_ipagnostic_samp_sizes(list_test_unspied)
+sampsizes_test_spied = get_ipagnostic_samp_sizes(list_test_spied)
+
+# We clear the output as the previous operations would be printing out too many messages
+clear_output(wait=False)
+
+sampnums_both_test = pd.concat([sampnums_test_unspied,sampnums_test_spied]).fillna(0)
+sampsizes_both_test = pd.concat([sampsizes_test_unspied,sampsizes_test_spied]).fillna(0)
+
+sampsizes_test_unspied[&quot;label&quot;] = 0
+sampsizes_test_spied[&quot;label&quot;] = 1
+labels_bin_test = pd.concat([sampsizes_test_unspied[&quot;label&quot;], sampsizes_test_spied[&quot;label&quot;]])
+sampsizes_test_unspied = sampsizes_test_unspied.drop(&quot;label&quot;,axis=1)
+sampsizes_test_spied = sampsizes_test_spied.drop(&quot;label&quot;,axis=1)
+
+features_both_test = pd.concat([sampnums_both_test.iloc[:,:50],sampsizes_both_test.iloc[:,:50]],axis=1)
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="Part-3:-Supervised-model">
+<h2>Part 3: Supervised model<a class="headerlink" href="#Part-3:-Supervised-model" title="Permalink to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">3.1</span> <span class="n">Multi</span><span class="o">-</span><span class="k">class</span> <span class="nc">Classificatoin</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Trying out <code class="docutils literal notranslate"><span class="pre">Random</span> <span class="pre">Forest</span></code>:</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+
+<span></span>from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import cross_val_score
+
+rf_model_multi = RandomForestClassifier(random_state=42,n_jobs=-1,n_estimators=200,class_weight=&quot;balanced&quot;)
+rf_model_multi.fit(both_features_train_multi,labels_multi)
+rf_multi_pred = rf_model_multi.predict(both_features_test_multi)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from sklearn import metrics
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, f1_score, roc_curve
+
+# Generating the confusion matrix from the true labels and predicted values
+print(metrics.confusion_matrix(labels_test_multi,rf_multi_pred))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[5 0 0 0 0 0]
+ [0 4 0 0 0 1]
+ [0 0 4 0 1 0]
+ [0 0 0 4 0 1]
+ [0 0 1 2 2 0]
+ [0 0 0 0 0 5]]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Visualizing the confusion matrix
+cm_rf_mt = confusion_matrix(labels_test_multi,rf_multi_pred,labels=rf_model_multi.classes_)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_rf_mt,display_labels=rf_model_multi.classes_)
+disp.plot()
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_detecting-spy-webcam_42_0.png" src="../_images/notebooks_detecting-spy-webcam_42_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Calculating the accuracy score
+acc_score_rf_mt = accuracy_score(labels_test_multi,rf_multi_pred)
+print(&quot;The accuracy score is &quot; + str(acc_score_rf_mt))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The accuracy score is 0.8
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Calculating the f1 score
+f1_sc_rf_mt = f1_score(labels_test_multi,rf_multi_pred,average=None)
+print(&quot;The f1 scores are &quot;+str(f1_sc_rf_mt))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The f1 scores are [1.         0.88888889 0.8        0.72727273 0.5        0.83333333]
+</pre></div></div>
+</div>
+<ul class="simple">
+<li><p>Trying out <code class="docutils literal notranslate"><span class="pre">Logistic</span> <span class="pre">Regression</span></code>:</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from sklearn.linear_model import LogisticRegression
+
+logreg_mt = LogisticRegression(random_state=42).fit(both_features_train_multi, labels_multi)
+logreg_multi_pred = logreg_mt.predict(both_features_test_multi)
+
+print(metrics.confusion_matrix(labels_test_multi,logreg_multi_pred))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[5 0 0 0 0 0]
+ [0 0 0 2 2 1]
+ [0 1 2 0 2 0]
+ [0 2 0 0 2 1]
+ [0 0 0 0 5 0]
+ [0 0 0 1 1 3]]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Visualizing the confusion matrix
+cm_logreg_mt = confusion_matrix(labels_test_multi,logreg_multi_pred,labels=logreg_mt.classes_)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_logreg_mt,display_labels=logreg_mt.classes_)
+disp.plot()
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_detecting-spy-webcam_47_0.png" src="../_images/notebooks_detecting-spy-webcam_47_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Calculating the accuracy score
+acc_score_logreg_mt = accuracy_score(labels_test_multi,logreg_multi_pred)
+print(&quot;The accuracy score is &quot; + str(acc_score_logreg_mt))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The accuracy score is 0.5
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Calculating the f1 score
+f1_sc_logreg_mt = f1_score(labels_test_multi,logreg_multi_pred,average=None)
+print(&quot;The f1 scores are &quot;+str(f1_sc_logreg_mt))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The f1 scores are [1.         0.         0.57142857 0.         0.58823529 0.6       ]
+</pre></div></div>
+</div>
+<ul class="simple">
+<li><p>Trying out <code class="docutils literal notranslate"><span class="pre">Multi-layer</span> <span class="pre">Perceptron</span></code></p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from sklearn.neural_network import MLPClassifier
+
+mlp_multi = MLPClassifier(hidden_layer_sizes={140,100},activation=&quot;logistic&quot;,solver=&quot;sgd&quot;,alpha=0.00001, learning_rate=&quot;adaptive&quot;, random_state=42,max_iter=10000).fit(both_features_train_multi,labels_multi)
+mlp_multi_pred = mlp_multi.predict(both_features_test_multi)
+
+# Generating the confusion matrix from the true labels and predicted values
+print(metrics.confusion_matrix(labels_test_multi,mlp_multi_pred))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[5 0 0 0 0 0]
+ [0 1 1 1 1 1]
+ [0 0 3 0 1 1]
+ [0 1 1 1 2 0]
+ [0 1 0 0 3 1]
+ [0 0 0 0 0 5]]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Visualizing the confusion matrix
+cm_mlp_mt = confusion_matrix(labels_test_multi,mlp_multi_pred,labels=mlp_multi.classes_)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_mlp_mt,display_labels=mlp_multi.classes_)
+disp.plot()
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_detecting-spy-webcam_52_0.png" src="../_images/notebooks_detecting-spy-webcam_52_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Calculating the accuracy score
+acc_score_logreg_mt = accuracy_score(labels_test_multi,mlp_multi_pred)
+print(&quot;The accuracy score is &quot; + str(acc_score_logreg_mt))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The accuracy score is 0.6
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Calculating the f1 score
+f1_sc_mlp_mt = f1_score(labels_test_multi,mlp_multi_pred,average=None)
+print(&quot;The f1 scores are &quot;+str(f1_sc_mlp_mt))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The f1 scores are [1.         0.25       0.6        0.28571429 0.5        0.76923077]
+</pre></div></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">3.2</span> <span class="n">Binary</span> <span class="n">Learning</span><span class="p">:</span> <span class="n">Spy</span> <span class="n">vs</span> <span class="n">Nonspy</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Trying out <code class="docutils literal notranslate"><span class="pre">Random</span> <span class="pre">Forest</span></code></p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import cross_val_score
+
+rf_model_bin = RandomForestClassifier(random_state=42,n_jobs=-1,n_estimators=200,class_weight=&quot;balanced&quot;)
+rf_model_bin.fit(features_both,labels_bin)
+
+rf_bin_pred = rf_model_bin.predict(features_both_test)
+
+print(metrics.confusion_matrix(labels_bin_test,rf_bin_pred))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[13  2]
+ [ 0 15]]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Visualizing the confusion matrix
+cm_rf_bin = confusion_matrix(labels_bin_test,rf_bin_pred,labels=rf_model_bin.classes_)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_rf_bin,display_labels=rf_model_bin.classes_)
+disp.plot()
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_detecting-spy-webcam_58_0.png" src="../_images/notebooks_detecting-spy-webcam_58_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Calculating the accuracy score
+acc_score_rf_bin = accuracy_score(labels_bin_test,rf_bin_pred)
+print(&quot;The accuracy score is &quot; + str(acc_score_rf_bin))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The accuracy score is 0.9333333333333333
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Calculating the f1 score
+f1_sc_rf_bin = f1_score(labels_bin_test,rf_bin_pred,average=None)
+print(&quot;The f1 scores are &quot;+str(f1_sc_rf_bin))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The f1 scores are [0.92857143 0.9375    ]
+</pre></div></div>
+</div>
+<ul class="simple">
+<li><p>Trying out <code class="docutils literal notranslate"><span class="pre">Logistic</span> <span class="pre">Regression</span></code></p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>logreg_bin = LogisticRegression(random_state=42).fit(features_both, labels_bin)
+logreg_bin_pred = logreg_bin.predict(features_both_test)
+
+print(metrics.confusion_matrix(labels_bin_test,logreg_bin_pred))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[13  2]
+ [ 4 11]]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Visualizing the confusion matrix
+cm_logreg_bin = confusion_matrix(labels_bin_test,logreg_bin_pred,labels=logreg_bin.classes_)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_logreg_bin,display_labels=logreg_bin.classes_)
+disp.plot()
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_detecting-spy-webcam_63_0.png" src="../_images/notebooks_detecting-spy-webcam_63_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Calculating the accuracy score
+acc_score_logreg_bin = accuracy_score(labels_bin_test,logreg_bin_pred)
+print(&quot;The accuracy score is &quot; + str(acc_score_logreg_bin))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The accuracy score is 0.8
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Calculating the f1 score
+f1_sc_logreg_bin = f1_score(labels_bin_test,logreg_bin_pred,average=None)
+print(&quot;The f1 scores are &quot;+str(f1_sc_logreg_bin))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The f1 scores are [0.8125     0.78571429]
+</pre></div></div>
+</div>
+<ul class="simple">
+<li><p>Trying out <code class="docutils literal notranslate"><span class="pre">Multi-layer</span> <span class="pre">Perceptron</span> <span class="pre">(MLP)</span></code></p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>mlp_bin = MLPClassifier(hidden_layer_sizes={140},activation=&quot;logistic&quot;,solver=&quot;sgd&quot;, random_state=42,max_iter=10000).fit(features_both,labels_bin)
+mlp_bin_pred = mlp_bin.predict(features_both_test)
+
+# Generating the confusion matrix from the true labels and predicted values
+print(metrics.confusion_matrix(labels_bin_test,mlp_bin_pred))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[13  2]
+ [ 3 12]]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Visualizing the confusion matrix
+cm_mlp_bin = confusion_matrix(labels_bin_test,mlp_bin_pred,labels=mlp_bin.classes_)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_mlp_bin,display_labels=mlp_bin.classes_)
+disp.plot()
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_detecting-spy-webcam_68_0.png" src="../_images/notebooks_detecting-spy-webcam_68_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Calculating the accuracy score
+acc_score_mlp_bin = accuracy_score(labels_bin_test,mlp_bin_pred)
+print(&quot;The accuracy score is &quot; + str(acc_score_mlp_bin))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The accuracy score is 0.8333333333333334
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Calculating the f1 score
+f1_sc_mlp_bin = f1_score(labels_bin_test,mlp_bin_pred,average=None)
+print(&quot;The f1 scores are &quot;+str(f1_sc_mlp_bin))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The f1 scores are [0.83870968 0.82758621]
+</pre></div></div>
+</div>
+</section>
+<section id="Part-4:-Unsupervised-model">
+<h2>Part 4: Unsupervised model<a class="headerlink" href="#Part-4:-Unsupervised-model" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Trying out <code class="docutils literal notranslate"><span class="pre">Kernel</span> <span class="pre">Density</span> <span class="pre">Estimation</span> <span class="pre">(KDE)</span></code></p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from sklearn.model_selection import train_test_split
+
+from netml.ndm.model import MODEL
+from netml.ndm.kde import KDE
+
+RANDOM_STATE = 42
+
+# create detection model
+kde = KDE(random_state=RANDOM_STATE)
+kde.name = &#39;KDE&#39;
+
+ndm_kde = MODEL(kde, score_metric=&#39;auc&#39;, verbose=0, random_state=RANDOM_STATE)
+
+# train the model from the train set
+ndm_kde.train(features_both)
+
+# evaluate the trained model
+ndm_kde.test(features_both_test, labels_bin_test)
+
+# stats
+print(ndm_kde.train.tot_time, ndm_kde.test.tot_time, ndm_kde.score)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;_train()&#39; starts at 2022-12-07 13:51:06
+&#39;_train()&#39; ends at 2022-12-07 13:51:06 and takes 0.0002 mins.
+&#39;_test()&#39; starts at 2022-12-07 13:51:06
+&#39;_test()&#39; ends at 2022-12-07 13:51:06 and takes 0.0001 mins.
+0.0002 0.0001 0.9066666666666667
+</pre></div></div>
+</div>
+<ul class="simple">
+<li><p>Trying out <code class="docutils literal notranslate"><span class="pre">One</span> <span class="pre">Class</span> <span class="pre">SVM(OCSVM)</span></code></p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from netml.ndm.ocsvm import OCSVM
+# create detection model
+ocsvm = OCSVM(kernel=&#39;rbf&#39;, nu=0.5, random_state=RANDOM_STATE)
+ocsvm.name = &#39;OCSVM&#39;
+ndm_ocsvm = MODEL(ocsvm, score_metric=&#39;auc&#39;, verbose=0, random_state=RANDOM_STATE)
+
+# train the model from the train set
+ndm_ocsvm.train(features_both,labels_bin)
+# evaluate the trained model
+ndm_ocsvm.test(features_both_test, labels_bin_test)
+
+# stats
+print(ndm_ocsvm.train.tot_time, ndm_ocsvm.test.tot_time, ndm_ocsvm.score)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;_train()&#39; starts at 2022-12-07 13:51:06
+&#39;_train()&#39; ends at 2022-12-07 13:51:06 and takes 0.0002 mins.
+&#39;_test()&#39; starts at 2022-12-07 13:51:06
+&#39;_test()&#39; ends at 2022-12-07 13:51:06 and takes 0.0002 mins.
+0.0002 0.0002 0.5288888888888889
+</pre></div></div>
+</div>
+<ul class="simple">
+<li><p>Trying out <code class="docutils literal notranslate"><span class="pre">Isolation</span> <span class="pre">Forest</span> <span class="pre">(IF/IForest)</span></code></p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from netml.ndm.iforest import IF
+
+iforest = IF(n_estimators = 1000, random_state=RANDOM_STATE)
+iforest.name = &#39;IForest&#39;
+ndm_iforest = MODEL(iforest, score_metric=&#39;auc&#39;, verbose=0, random_state=RANDOM_STATE)
+
+# train the model from the train set
+ndm_iforest.train(features_both,labels_bin)
+# evaluate the trained model
+ndm_iforest.test(features_both_test, labels_bin_test)
+
+# stats
+print(ndm_iforest.train.tot_time, ndm_iforest.test.tot_time, ndm_iforest.score)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;_train()&#39; starts at 2022-12-07 13:51:06
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+[Parallel(n_jobs=8)]: Using backend ThreadingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done   2 out of   8 | elapsed:    2.3s remaining:    6.9s
+[Parallel(n_jobs=8)]: Done   8 out of   8 | elapsed:    2.5s finished
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;_train()&#39; ends at 2022-12-07 13:51:12 and takes 0.1062 mins.
+&#39;_test()&#39; starts at 2022-12-07 13:51:12
+&#39;_test()&#39; ends at 2022-12-07 13:51:15 and takes 0.0406 mins.
+0.1062 0.0406 0.039999999999999994
+</pre></div></div>
+</div>
+<ul class="simple">
+<li><p>Trying out <code class="docutils literal notranslate"><span class="pre">Gaussian</span> <span class="pre">Mixture</span> <span class="pre">Model</span> <span class="pre">(GMM)</span></code></p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from netml.ndm.gmm import GMM
+
+# create detection model
+gmm = GMM(reg_covar= 1e-2, random_state=RANDOM_STATE)
+gmm.name = &#39;GMM&#39;
+
+ndm_gmm = MODEL(gmm, score_metric=&#39;auc&#39;, verbose=0, random_state=RANDOM_STATE)
+
+# train the model from the train set
+ndm_gmm.train(features_both)
+
+# evaluate the trained model
+ndm_gmm.test(features_both_test, labels_bin_test)
+
+# stats
+print(ndm_gmm.train.tot_time, ndm_gmm.test.tot_time, ndm_gmm.score)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;_train()&#39; starts at 2022-12-07 13:51:15
+&#39;_train()&#39; ends at 2022-12-07 13:51:16 and takes 0.0084 mins.
+&#39;_test()&#39; starts at 2022-12-07 13:51:16
+&#39;_test()&#39; ends at 2022-12-07 13:51:16 and takes 0.0001 mins.
+0.0084 0.0001 0.888888888888889
+</pre></div></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../additional/preview.html" class="btn btn-neutral float-left" title="Project Preview: Detecting Spying Webcams" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../additional/results.html" class="btn btn-neutral float-right" title="Result Discussion" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yudai Tanaka, Cyrus Zhou.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

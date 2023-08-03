@@ -1,0 +1,56 @@
+Project Overview: Detecting Spying Webcams
+==========================================
+
+Authors: Yudai Tanaka and Cyrus Zhou
+------------------------------------
+*Yudai Tanaka* is a third-year phd student in the department of computer science at the University of Chicago advised by *Pedro Lopes*.
+He invents novel channels for computers to intercept our nervous system and allows them to actuate our perception and behavior.
+
+*Cyrus Zhou* is a third-year undergraduate student in the department of computer science at the University of Chicago.
+He is interested in distributed and embedded systems.
+
+Background and Motivation
+-------------------------
+Various forms of video communications have emerged during the past decade. With improved convenience and realness, also grown are threats to users' privacy and security. Hackers around the world have long been attempting to steal real-time video data from the webcams embedded inside our computers. While most computers now have status lights to tell whether their webcams are in use or not, it would still be hard to tell if a user is being spied or not under certain circumstances. Particularly, if the hackers start stealing data only after the users themselves have started using the webcam (e.g., for video conferencing or video calls), the status lights would not give users sufficient information on their security and privacy.
+
+Such loopholes bring up potentially significant applications of machine learning techniques on networking data. In this project, we investigate the features of packet traces under a variety of situations: 1. no video application is running; 2. only the spying application is running; 3. only WeChat Video Call is running; 4. both WeChat Video Call and the spying application are running; 5. only Zoom Video Conferencing is running, and 6. both Zoom Video Conferencing and the spying application are running. We are currently not too much interested in the scenario under which the user is actively (i.e., not including the spying application) running more than one video applications, as it mostly does not mimic real-world user behavior. While our list of options is not even close to exhaustive, WeChat Video Call would represent most video networking apps for daily communications, and Zoom would represent most video networking apps for meetings on-cloud.
+
+We perform both supervised learning and unsupervised learning. For unsupervised learning, we perform binary classification for anomaly (spying) detection. For supervised learning, we try out both multiclass classification (for the above mentioned 6 scenarios) and binary classification (spying vs non-spying).
+
+Data Collection
+---------------
+We set up the previously mentioned scenarios on our laptops (Macbooks with Intel chips). We use Wireshark to capture PCAP files from the computer network. We perform 20 trials of data collection for each scenario, where each trial embraces 10 seconds of captured networking data. To more realistically mimic user behavior in using networked video applications, we also played various sounds at random intervals. Note that we have performed our data collection in the middle of a scenario, so startup and finishup conditions are not captured.
+
+To setup the spying conditions, we followed `an exisiting implementation`_ , and implemented our custome web application based on Flask that broadcasts the webcam's live stream to a local network.
+
+.. an exisiting implementation: https://github.com/NakulLakhotia/Live-Streaming-using-OpenCV-Flask
+
+Notebook Implementation
+--------------------------
+In our Jupyter Notebook (which you can find in the next section):
+    1. We first load some example data, convert the pcap to flows, turn the flows to be ip-agnostic (so we have only one 'flow' left), and synthesize packet-level features.
+    2. We then speculate these features and inductively conclude if they can be used for learning the calssification problem.
+    3. We load all pcap files, and for each of them we make one huge 'flow' to synthesize packet-level features.
+    4. We prepare features and labels for both multiclass classifications and binary classifications on a granularity of "instances/files".
+    5. For multiclass classifications and binary classifications, we test out the performance of several models, in the following sequence:
+        a. multiclass problem formulation, supervised models
+        b. binary formulation, supervised models
+        c. binary formulation, unsupervised models
+
+Results and Findings
+--------------------
+
+
+Evaluations
+-----------
+Mostly, our implementation is quite successful [TODO].
+
+**Nevertheless, our project does have several limitations. **
+
+*First, we do not have sufficient data to train deployment-ready data.* This is because both (1) we did not devote enough time into collecting data and (2) we are handling our data on a gradularity of "instances/files". Most models would yield a greater performance with more data to train and validate. Some models, such as deep learning, perform especially poorly with few data.
+
+*Second, we only collected data with the applications transmitting data over a local network.* Most spying would happen over a distance and have different networks communicating with each other. Our data collection setup definitely underestimates factors such as latency and dns lookup time. Metrics such as inter-arrival time would thus not provide us with generalizable insights, and that is partially why we were not using it as a feature to our model. That said, the features we did choose to use would also have some validity issues, but these limitations arise mainly because of time and economic restrictions (this is just a course project anyways!).
+
+
+Acknowledgements
+----------------

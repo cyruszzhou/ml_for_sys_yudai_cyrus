@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Preview: Detecting Spying Webcams &mdash; Detecting Spying Webcams 0.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Jupyter Notebook on Detecting Spying Webcams" href="../notebooks/detecting-spy-webcam.html" />
+    <link rel="prev" title="Welcome to Detecting Spying Webcams’s documentation!" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Detecting Spying Webcams
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Project Preview: Detecting Spying Webcams</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#authors-yudai-tanaka-and-cyrus-zhou">Authors: Yudai Tanaka and Cyrus Zhou</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#background-and-motivation">Background and Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-collection">Data Collection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#notebook-implementation">Notebook Implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#on-ip-agnosticity">On <code class="docutils literal notranslate"><span class="pre">ip-agnosticity</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/detecting-spy-webcam.html">Jupyter Notebook on Detecting Spying Webcams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Result Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html#limitations-and-future-work">Limitations and Future Work</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html#notes-on-parameter-tuning">Notes on Parameter Tuning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html#conclusion">Conclusion</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Detecting Spying Webcams</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Project Preview: Detecting Spying Webcams</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/additional/preview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="project-preview-detecting-spying-webcams">
+<h1>Project Preview: Detecting Spying Webcams<a class="headerlink" href="#project-preview-detecting-spying-webcams" title="Permalink to this heading"></a></h1>
+<section id="authors-yudai-tanaka-and-cyrus-zhou">
+<h2>Authors: Yudai Tanaka and Cyrus Zhou<a class="headerlink" href="#authors-yudai-tanaka-and-cyrus-zhou" title="Permalink to this heading"></a></h2>
+<p><em>Yudai Tanaka</em> is a third-year phd student in the department of computer science at the University of Chicago advised by <em>Pedro Lopes</em>.
+He invents novel channels for computers to intercept our nervous system and allows them to actuate our perception and behavior.</p>
+<p><em>Cyrus Zhou</em> is a third-year undergraduate student in the department of computer science at the University of Chicago.
+He is interested in distributed and embedded systems.</p>
+</section>
+<section id="background-and-motivation">
+<h2>Background and Motivation<a class="headerlink" href="#background-and-motivation" title="Permalink to this heading"></a></h2>
+<p>Various forms of video communications have emerged during the past decade. With improved convenience and realness, also grown are threats to users’ privacy and security. Hackers around the world have long been attempting to steal real-time video data from the webcams embedded inside our computers. While most computers now have status lights to tell whether their webcams are in use or not, it would still be hard to tell if a user is being spied or not under certain circumstances. Particularly, if the hackers start stealing data only after the users themselves have started using the webcam (e.g., for video conferencing or video calls), the status lights would not give users sufficient information on their security and privacy.</p>
+<p>Such loopholes bring up potentially significant applications of machine learning techniques on networking data. In this project, we investigate the features of packet traces under a variety of situations:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>no video application is running;</p></li>
+<li><p>only the spying application is running;</p></li>
+<li><p>only WeChat Video Call is running;</p></li>
+<li><p>both WeChat Video Call and the spying application are running;</p></li>
+<li><p>only Zoom Video Conferencing is running, and</p></li>
+<li><p>both Zoom Video Conferencing and the spying application are running.</p></li>
+</ol>
+</div></blockquote>
+<p>We are currently not too much interested in the scenario under which the user is actively (i.e., not including the spying application) running more than one video applications, as it mostly does not mimic real-world user behavior. While our list of options is not even close to exhaustive, WeChat Video Call would represent most video networking apps for daily communications, and Zoom would represent most video networking apps for meetings on-cloud.</p>
+<p>We perform both supervised learning and unsupervised learning. For unsupervised learning, we perform binary classification for anomaly (spying) detection. For supervised learning, we try out both multiclass classification (for the above mentioned 6 scenarios) and binary classification (spying vs non-spying).</p>
+</section>
+<section id="data-collection">
+<h2>Data Collection<a class="headerlink" href="#data-collection" title="Permalink to this heading"></a></h2>
+<p>We set up the previously mentioned scenarios on our laptops (Macbooks with Intel chips). We use Wireshark to capture PCAP files from the computer network. We perform 20 trials of data collection for each scenario, where each trial embraces 10 seconds of captured networking data. To more realistically mimic user behavior in using networked video applications, we also played various sounds at random intervals. Note that we have performed our data collection in the middle of a scenario, so startup and finishup conditions are not captured.</p>
+<p>To setup the spying conditions, we followed <a class="reference external" href="https://github.com/NakulLakhotia/Live-Streaming-using-OpenCV-Flask">an exisiting implementation</a> , and implemented our custome web application based on Flask that broadcasts the webcam’s live stream to a local network.</p>
+</section>
+<section id="notebook-implementation">
+<h2>Notebook Implementation<a class="headerlink" href="#notebook-implementation" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>In our Jupyter Notebook (which you can find in the next section):</dt><dd><ol class="arabic simple">
+<li><p>We first load some example data, convert the pcap to flows, turn the flows to be ip-agnostic (so we have only one ‘flow’ left), and synthesize packet-level features.</p></li>
+<li><p>We then speculate these features and inductively conclude if they can be used for learning the calssification problem.</p></li>
+<li><p>We load all pcap files, and for each of them we make one huge ‘flow’ to synthesize packet-level features.</p></li>
+<li><p>We prepare features and labels for both multiclass classifications and binary classifications on a granularity of “instances/files”.</p></li>
+<li><dl class="simple">
+<dt>For multiclass classifications and binary classifications, we test out the performance of several models, in the following sequence:</dt><dd><ol class="loweralpha simple">
+<li><p>multiclass problem formulation, supervised models</p></li>
+<li><p>binary formulation, supervised models</p></li>
+<li><p>binary formulation, unsupervised models</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+</ol>
+</dd>
+</dl>
+</section>
+<section id="on-ip-agnosticity">
+<h2>On <code class="docutils literal notranslate"><span class="pre">ip-agnosticity</span></code><a class="headerlink" href="#on-ip-agnosticity" title="Permalink to this heading"></a></h2>
+<p>In this project, we are not using any information on ip addresses. Here are two reasons: 1. if the user knows the mapping of the ip addresses, then they can simply refer to the ip column of their network capture to see if they are being spied or not - there is no need for applying machine learning models; 2. if the user does not know the mapping of the ip addresses, then we have to apply our machine learning models to packet-level information instead of flow-level information - this necessitates the discard of ip information. In our project, we generate packet-level information by merging all packets into a single dummy flow. This is just for the proper utliziation of the netml library. Please note that we are not really doing flow-level analysis.</p>
+</section>
+<section id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this heading"></a></h2>
+<p>We thank <em>Professor Nick Feamster</em> for teaching <em>CMSC 25422: Machine Learning for Computer Systems</em> and granting us permission to his IoT lab. We also thank <em>Shinan Liu</em> for advising the packet capturing process. We really appreciate the help though we finally did not follow our original proposal!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to Detecting Spying Webcams’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../notebooks/detecting-spy-webcam.html" class="btn btn-neutral float-right" title="Jupyter Notebook on Detecting Spying Webcams" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yudai Tanaka, Cyrus Zhou.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
